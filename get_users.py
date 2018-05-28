@@ -5,9 +5,13 @@
 # function  : 获取某件店的所有评论用户, user id会写入到user_list.csv文件中（不重复）
 
 import sys
+import time
 import urllib2
-import config
+
 from BeautifulSoup import BeautifulSoup
+
+import config
+from wait import wait_time
 
 reload(sys)
 sys.setdefaultencoding("utf8")
@@ -46,6 +50,7 @@ def get_shop_comment_users(shop_id):
     user_ids.extend(get_usr_id(soup, current_users))
 
     for num in range(2, page_num + 1):
+        time.sleep(wait_time(5, 2))
         url = review_url + "/p" + str(num)
         request = urllib2.Request(url, headers=headers)  # 发送网络请求
         response = urllib2.urlopen(request)

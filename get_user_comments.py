@@ -7,13 +7,14 @@
 
 import re
 import sys
+import time
 import urllib
 import urllib2
-import time
-import config
-import numpy as np
 
 from BeautifulSoup import BeautifulSoup
+
+import config
+from wait import wait_time
 
 reload(sys)
 sys.setdefaultencoding("utf8")
@@ -22,36 +23,6 @@ user_agent = config.user_agent
 cookie = config.cookie
 user_list_path=config.user_list_path
 comments_path=config.comments_path
-
-def box_muller_sample(mu, sigma):
-    '''
-    利用Box-Muller生成服从正态分布的随机数
-    :param mu: 平均值
-    :param sigma: 方差
-    :return:
-    '''
-    u1 = np.random.uniform(size=1)
-    u2 = np.random.uniform(size=1)
-    R = np.sqrt(-np.log(u1))
-    theta = 2 * np.pi * u2
-    z = R * np.cos(theta)
-    rand_data = mu + z * sigma
-    return rand_data[0]
-
-
-def wait_time(mu, sigma):
-    '''
-    生成服从正态分布的等待时间，如果小于0则改为1
-    :param mu: 平均时间
-    :param sigma: 时间方差
-    :return:
-    '''
-    seconds = box_muller_sample(mu, sigma)
-    if seconds < 0:
-        wait_seconds = 1
-    else:
-        wait_seconds = seconds
-    return wait_seconds
 
 
 def get_comments(user_id):
@@ -83,8 +54,7 @@ def get_comments(user_id):
     get_user_page_comment(lis, user_id, user_name)
 
     for num in range(2, page_num + 1):
-        wait_seconds = box_muller_sample(5, 2)
-        time.sleep(wait_seconds)
+        time.sleep(wait_time(5,2))
         url = user_url + "?pg=" + str(num) + "&reviewCityId=0&reviewShopType=0&c=0&shopTypeIndex=0"
         print user_id, user_name, "pages:" + str(num) + " " + url
         request = urllib2.Request(url, headers=headers)  # 发送网络请求
