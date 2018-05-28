@@ -4,6 +4,7 @@
 # @Author   : Edward  Luo<daipeng_luo@qq.com>
 # function  : 获取某件店的所有评论用户, user id会写入到user_list.csv文件中（不重复）
 
+import os
 import sys
 import time
 import urllib2
@@ -22,7 +23,7 @@ cookie = config.cookie
 user_list_path=config.user_list_path
 
 
-def get_shop_comment_users(shop_id):
+def get_shop_comment_users(shop_id,start_page):
     """
     获取该店所有的评论用户
     :param shop_id:
@@ -40,25 +41,25 @@ def get_shop_comment_users(shop_id):
         page_num = 1
     else:
         page_num = int(pages[-2]["data-pg"])
-    print(page_num)
+    print("pages:"+str(page_num))
 
     # file_name = soup.find(name="h1").find(name="a")["title"]
     # print(file_name)
     current_users = get_current_users()
 
-    user_ids = []
-    user_ids.extend(get_usr_id(soup, current_users))
+    if start_page==1:
+        print("start_page:1", review_url)
+        get_usr_id(soup, current_users)
+        start_page+=1
 
-    for num in range(2, page_num + 1):
+    for num in range(start_page, page_num + 1):
         time.sleep(wait_time(5, 2))
         url = review_url + "/p" + str(num)
+        print("start_page:"+str(num),url)
         request = urllib2.Request(url, headers=headers)  # 发送网络请求
         response = urllib2.urlopen(request)
-        user_ids.extend(get_usr_id(BeautifulSoup(response.read()), current_users))
-    print(user_ids)
+        get_usr_id(BeautifulSoup(response.read()), current_users)
 
-    with open(user_list_path, "a") as f:
-        f.write("\n".join(user_ids))
 
 
 def get_usr_id(soup, current_users):
@@ -76,7 +77,9 @@ def get_usr_id(soup, current_users):
             pass
         else:
             page_users.append(comment["data-user-id"])
-    return page_users
+    with open(user_list_path, "a") as f:
+        f.write("\n".join(page_users))
+        f.write("\n")
 
 
 def get_current_users():
@@ -85,6 +88,8 @@ def get_current_users():
     :return:
     """
     users = []
+    if not os.path.exists(user_list_path):
+        return []
     with open(user_list_path, "r") as fr:
         for line in fr:
             users.append(line.strip("\n"))
@@ -92,5 +97,6 @@ def get_current_users():
 
 
 if __name__ == '__main__':
-    shop_id=11111
-    get_shop_comment_users(shop_id)
+    shop_id=76873808
+    start_page=1    # 可能前面几页的用户已经抓取过
+    get_shop_comment_users(shop_id,start_page)
