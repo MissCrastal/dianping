@@ -46,10 +46,11 @@ def get_comments(user_id):
     else:
         pages = pages_item.findAll(name="a")
         page_num = int(pages[-2]["data-pg"])
-    print(page_num)
+    print page_num
 
     user_name = soup.find(name="h2", attrs={"class": "name"}).text
 
+    print user_id, user_name, "pages:1" + " " + user_url
     lis = soup.find(name="div", attrs={"class": "pic-txt"}).findAll(name="div", attrs={"class": "txt J_rptlist"})
     get_user_page_comment(lis, user_id, user_name)
 
@@ -105,21 +106,39 @@ def get_user_page_comment(lis_soup, user_id, user_name):
 
 
 def get_all_comments(start_num):
+    """
+    获取所有评论
+    :param start_num: 开始的用户编号
+    :return:
+    """
     with open(user_list_path, "r") as f:
         users = f.readlines()
-        for num in range(start_num, len(users)):
-            user = users[num]
-            print("user num:", num)
-            get_comments(user.strip("\n"))
-            wait_seconds = box_muller_sample(5, 2)
-            time.sleep(wait_seconds)
+
+    for num in range(start_num, len(users)):
+        user = users[num]
+        print("user num:", num)
+        get_comments(user.strip("\n"))
+        time.sleep(wait_time(5,2))
 
 
 def get_pic(pic_url):
+    """
+    获取图片
+    :param pic_url:
+    :return:
+    """
     urllib.urlretrieve(pic_url, '%s.jpg' % 1)
 
 
 def get_some_coments(user_id, page_num, start_num, user_name):
+    """
+    获取部分评论
+    :param user_id: 用户id
+    :param page_num: 总共页数
+    :param start_num: 开始爬的页码
+    :param user_name: 用户名
+    :return:
+    """
     user_url = "http://www.dianping.com/member/" + str(user_id) + "/reviews"
     headers = {'User-Agent': user_agent, "cookie": cookie}
 
@@ -133,11 +152,10 @@ def get_some_coments(user_id, page_num, start_num, user_name):
         soup = BeautifulSoup(response.read())
         lis = soup.find(name="div", attrs={"class": "pic-txt"}).findAll(name="div", attrs={"class": "txt J_rptlist"})
         get_user_page_comment(lis, user_id, user_name)
-        wait_seconds = box_muller_sample(5, 2)
-        time.sleep(wait_seconds)
+        time.sleep(wait_time(5,2))
 
 
 if __name__ == '__main__':
-    start_num = 521
+    start_num = 0   # 从第几个用户开始，由于所有用户数据都在一个文件里，每次跑时需要修改
     get_all_comments(start_num)
     # get_some_coments("1525049",165,57,"洋葱小姐会开花")
