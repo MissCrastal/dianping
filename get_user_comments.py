@@ -156,6 +156,6 @@ def get_some_coments(user_id, page_num, start_num, user_name):
 
 
 if __name__ == '__main__':
-    start_num = 0   # 从第几个用户开始，由于所有用户数据都在一个文件里，每次跑时需要修改
+    start_num = 0   # 从第几个用户(user_list文件第几行)开始，由于所有用户数据都在一个文件里，每次跑时需要修改
     get_all_comments(start_num)
     # get_some_coments("1525049",165,57,"洋葱小姐会开花")
