@@ -11,4 +11,4 @@
 5. config.py: 配置文件
 6. wait.py: 生成服从正态分布的程序停止时间
 
->note:每次运行时注意修改start参数
+>note:每次运行时注意修改配置文件config.py下的参数和程序下的start参数
