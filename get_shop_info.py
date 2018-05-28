@@ -8,13 +8,18 @@ import re
 import sys
 import time
 import urllib2
-
+import config
 import numpy as np
 from BeautifulSoup import BeautifulSoup
 
 reload(sys)
 sys.setdefaultencoding("utf8")
 
+
+user_agent = config.user_agent
+cookie = config.cookie
+shop_info_path=config.shop_info_path
+shop_list_path=config.shop_list_path
 
 def box_muller_sample(mu, sigma):
     '''
@@ -54,8 +59,6 @@ def get_shop_info(shop_id):
     :return:
     """
     shop_url = "http://www.dianping.com/shop/" + str(shop_id)
-    user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36"
-    cookie = "s_ViewType=10; _lxsdk_cuid=161bc8b0867c8-0936b88c27d08-4323461-100200-161bc8b0867c8; _lxsdk=161bc8b0867c8-0936b88c27d08-4323461-100200-161bc8b0867c8; _hc.v=2b3536d6-3ea5-2c71-6b24-6b2194328e11.1519286684; aburl=1; __utma=1.2035882514.1519290125.1519290125.1519290125.1; __utmz=1.1519290125.1.1.utmcsr=sogou.com|utmccn=(referral)|utmcmd=referral|utmcct=/link; ctu=91412a608d02e58385b163ced37baf6af7b5cfa062bdc424bf3021d541754400; __utmz=1.1519290125.1.1.utmcsr=sogou.com|utmccn=(referral)|utmcmd=referral|utmcct=/link; __utma=1.2035882514.1519290125.1519290125.1519290125.1; cityInfo=%7B%22cityId%22%3A1%2C%22cityEnName%22%3A%22shanghai%22%2C%22cityName%22%3A%22%E4%B8%8A%E6%B5%B7%22%7D; cy=16; cye=wuhan; dper=ccab8f9de523d407a93e7aee870d4a21ef006c4334e74709010fb240d070cbca6e57159810f31745f4d8980a12775182c0e740f84990466f9be7cf771b83e000a887166442673ec7d516a4ff6b5d545a27efa8c3aaca5ac2dd2c0f290e15f12a; ua=dpuser_7575831921; _lx_utm=utm_source%3DBaidu%26utm_medium%3Dorganic; ll=7fd06e815b796be3df069dec7836c3df; __mta=251534265.1525606929473.1525929703867.1525944338404.9; _lxsdk_s=163498e15e4-ee2-020-a87%7C%7C21"
     headers = {'User-Agent': user_agent, "cookie": cookie}
 
     print "start_shop:" + shop_id, shop_url
@@ -103,14 +106,14 @@ def get_all_shop_info(start_num):
     :param start_num: 开始的商家号
     :return:
     """
-    with open("shop_list.csv", "r") as fr:
+    with open(shop_list_path, "r") as fr:
         shops = fr.readlines()
         for num in range(start_num, len(shops)):
             shop_info = shops[num].strip("\n").split("\t")
             shop_id = shop_info[0]
             print("shop num:", num)
             shop_info.extend(get_shop_info(shop_id))
-            with open("shop_info.csv", "a") as fa:
+            with open(shop_info_path, "a") as fa:
                 fa.write("\t".join(shop_info))
                 fa.write("\n")
             wait_seconds = wait_time(3, 2)

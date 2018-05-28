@@ -4,13 +4,17 @@
 # @Author   : Edward  Luo<daipeng_luo@qq.com>
 # function  : 获取评论涉及到的店铺
 
+import config
+
+shop_list_path=config.shop_list_path
+comments_path=config.comments_path
 
 
 def get_shops():
     shops = []
     current_shops=get_current_shops()
-    with open("shop_list.csv", "a") as fa:
-        with open("comments1.csv", "r") as fr:
+    with open(shop_list_path, "a") as fa:
+        with open(comments_path, "r") as fr:
             comments = fr.readlines()
             for comment in comments:
                 comment_info = comment.strip("\n").split("\t")
@@ -29,11 +33,11 @@ def get_shops():
 
 def get_current_shops():
     """
-    获取现有所有用户id
+    获取现有所有商户id
     :return:
     """
     shops = []
-    with open("shop_list.csv", "r") as fr:
+    with open(shop_list_path, "r") as fr:
         for line in fr:
             shops.append(line.strip("\n"))
     return shops
