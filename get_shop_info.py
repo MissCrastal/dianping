@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # @Time     : 2018/5/8 23:55
 # @Author   : Edward  Luo<daipeng_luo@qq.com>
-# function  : get_shop_info.py
+# function  : 获取店铺信息，添加到shop_info.csv文件
 
 import re
 import sys

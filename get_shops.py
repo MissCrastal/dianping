@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # @Time     : 2018/5/8 23:35
 # @Author   : Edward  Luo<daipeng_luo@qq.com>
-# function  : 获取评论涉及到的店铺
+# function  : 获取评论涉及到的店铺,添加到shop_list.csv文件中
 
 import os
 
