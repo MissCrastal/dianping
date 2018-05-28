@@ -96,6 +96,6 @@ def get_all_shop_info(start_num):
 
 
 if __name__ == '__main__':
-    start_num=2298
+    start_num=0  # 从第几个商家开始(shop_list文件第几行)，由于所有商家数据都在一个文件里，每次跑时都需要修改
     get_all_shop_info(start_num)
     # print(get_shop_info("69734332"))

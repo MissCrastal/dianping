@@ -47,5 +47,5 @@ def get_current_shops():
     return cur_shops
 
 if __name__ == '__main__':
-    start_comment=0     # 从第几个评论开始算起，由于所有评论数据都在一个文件里，当评论数据非常多以后，修改起始评论编号可以节约时间
+    start_comment=0     # 从第几个评论(comments文件第几行)开始算起，由于所有评论数据都在一个文件里，当评论数据非常多以后，修改起始评论编号可以节约时间
     get_shops(start_comment)
